@@ -1,0 +1,193 @@
+################
+version: '3.9' #
+services:      #
+################
+#
+# Service Back End
+# XXX.XXX.10.1+1
+#
+#################################################################
+  CN_AdminCentralPanel_WebTerminal_GuaCd:
+    # --------------------------------------------------------- #
+    image: 'guacamole/guacd:0.9.14'
+    # --------------------------------------------------------- #
+    environment:
+      GUACDHOST: 'CN_AdminCentralPanel_WebTerminal_GuaCd'
+      REDISHOST: 'CN_AdminCentralPanel_WebTerminal_Redis'
+      WEBTERMINALHOST: 'WebTerminal'
+    # --------------------------------------------------------- #
+    volumes:
+      - 'WebTerminal_Recording:/opt/webterminal/media/'
+    # --------------------------------------------------------- #
+    networks: 
+      Secure_Lan:
+        ipv4_address: '10.1.10.2'
+#################################################################
+#
+#
+#################################################################
+  CN_AdminCentralPanel_WebTerminal_Redis:
+    # --------------------------------------------------------- #
+    image: 'redis:6.0-alpine'
+    # --------------------------------------------------------- #
+    networks: 
+      Secure_Lan:
+        ipv4_address: '10.1.10.1'
+#################################################################
+#
+# Service Front End
+# XXX.XXX.0.1+1
+#
+#################################################################
+  CN_AdminCentralPanel_WebTerminal_WebSite:
+    # --------------------------------------------------------- #
+    image: 'webterminal/webterminal:beta'
+    # --------------------------------------------------------- #
+    environment:
+      GUACDHOST: 'CN_AdminCentralPanel_WebTerminal_GuaCd'
+      REDISHOST: 'CN_AdminCentralPanel_WebTerminal_Redis'
+    # --------------------------------------------------------- #
+    volumes:
+      - 'WebTerminal_Recording:/opt/webterminal/media/'
+      - 'WebTerminal_DtatBase:/opt/webterminal/db/'
+    # --------------------------------------------------------- #
+    links:
+      - 'CN_AdminCentralPanel_WebTerminal_Redis'
+      - 'CN_AdminCentralPanel_WebTerminal_GuaCd'
+    # --------------------------------------------------------- #
+    networks: 
+      Secure_Lan:
+        ipv4_address: '10.1.0.3'
+#################################################################
+#
+#
+#################################################################
+# Afficher les logs des Conteneurs via une WebUI
+  CN_AdminCentralPanel_Dozzle: 
+    # --------------------------------------------------------- #
+    image: 'amir20/dozzle'
+    container_name: 'CN_AdminCentralPanel_Dozzle'
+    # --------------------------------------------------------- #
+    hostname: 'CN_AdminCentralPanel_Dozzle'
+    # --------------------------------------------------------- #
+    restart: 'always'
+    # --------------------------------------------------------- #
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    # --------------------------------------------------------- #
+    networks: 
+      Secure_Lan:
+        ipv4_address: '10.1.0.2'
+#################################################################
+#
+#
+#################################################################
+# http://Your_IP:9443/ => https://portainer.exemple.fr/
+  CN_AdminCentralPanel_Portainer:
+    # --------------------------------------------------------- #
+    image: 'portainer/portainer-ce'
+    container_name: 'CN_AdminCentralPanel_Portainer'
+    # --------------------------------------------------------- #
+    restart: 'always'
+    # --------------------------------------------------------- #
+    volumes:
+      - 'Portainer_Data:/data'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    # --------------------------------------------------------- #
+    networks: 
+      Secure_Lan:
+        ipv4_address: '10.1.0.1'
+#################################################################
+#
+# Passerel Front End
+# XXX.XXX.0.254-1
+#
+#################################################################
+  CN_AdminCentralPanel_WebPanel:
+    # --------------------------------------------------------- #
+    image: 'pikatsuto/admin-central-panel'
+    container_name: 'CN_AdminCentralPanel_WebPanel'
+    # --------------------------------------------------------- #
+    restart: 'always'
+    # --------------------------------------------------------- #
+    volumes:
+      - 'WebPanel_Data:/usr/local/apache2/htdocs'
+    # --------------------------------------------------------- #
+    environment:
+      PortainerHttpOrHttps: 'https'
+      WebSshHttpOrHttps: 'http'
+      DozzleHttpOrHttps: 'http'
+      ProxyHttpOrHttps: 'http'
+      # ------------------------------------------------------- #
+      PortainerIp: '10.1.0.1'
+      WebSshIp: '10.1.0.3'
+      DozzleIp: '10.1.0.2'
+      ProxyIp: '127.0.0.1'
+      # ------------------------------------------------------- #
+      PortainerPort: '9443'
+      WebSshPort: '80'
+      DozzlePort: '8080'
+      ProxyPort: '81'
+    # --------------------------------------------------------- #
+    networks: 
+      Secure_Lan:
+        ipv4_address: '10.1.0.254'
+#################################################################
+#
+# Router
+# XXX.XXX.255.254
+#
+#################################################################
+# Email: admin@example.com | pass: changeme
+# http://Your_IP:81/ => https://proxy.exemple.fr/
+  CN_AdminCentralPanel_NginxProxyManager:
+    # --------------------------------------------------------- #
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: 'CN_AdminCentralPanel_NginxProxyManager'
+    # --------------------------------------------------------- #
+    restart: 'unless-stopped'
+    hostname: 'admin.local'
+    # --------------------------------------------------------- #
+    volumes:
+      - 'NginxProxyManager_Data:/data'
+      - 'NginxProxyManager_SSL:/etc/letsencrypt'
+    # --------------------------------------------------------- #
+    network_mode: 'host'
+#################################################################
+#
+#
+#####################################
+volumes: #  Déclaration du volumes  #
+#####################################
+  # ------------------------------- #
+  WebTerminal_DtatBase:
+    external: false
+  # ------------------------------- #
+  WebTerminal_Recording:
+    driver: 'local'
+  # ------------------------------- #
+  Portainer_Data:
+    external: false
+  # ------------------------------- #
+  WebPanel_Data:
+    external: false
+  # ------------------------------- #
+  NginxProxyManager_Data:
+    external: false
+  # ------------------------------- #
+  NginxProxyManager_SSL:
+    external: false
+#####################################
+#
+#
+#####################################
+networks: #  Déclaration du Réseau  #
+#####################################
+  Secure_Lan:
+    driver: 'bridge'
+    ipam:
+      driver: 'default'
+      config:
+        - subnet: '10.1.0.0/16'
+          gateway: '10.1.255.254'
+  # ------------------------------- #

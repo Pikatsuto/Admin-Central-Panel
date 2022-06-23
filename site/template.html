@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
+    <title>Admin Central Panel</title>
+    
+    <script src="index.js"></script>
+      
+  </head>
+  <body>
+    <header>
+      <nav id='menu'>
+          <img src="favicon.png" alt="Admin Controle Panel Logo">
+          <p>Admin Central Panel</p>
+
+          <input type='checkbox' id='responsive-menu' onclick='updatemenu()'><label></label>
+          <ul>
+            <li><a class='dropdown-arrow'>Panels</a>
+              <ul class='sub-menus'>
+                <li><a id="portainerMenu" onClick='multiTogg("portainer", "site", true)'>Portainer</a></li>
+                <li><a id="proxyMenu" onClick='multiTogg("proxy", "site", true)'>Proxy</a></li>
+              </ul>
+            </li>
+            <li>
+              <a id="sshMenu" onClick='multiTogg("ssh", "site", true)'>SSH</a>
+            </li>
+            <li>
+              <a id="dozzleMenu" onClick='multiTogg("dozzle", "site", true)'>Container Logs</a>
+            </li>
+            <li><a class='dropdown-arrow'>Domaine</a>
+              <ul class='sub-menus'>
+                <li><a href='https://my.freenom.com/clientarea.php?action=domains' target="_blank">Freenom</a></li>
+                <li><a href='https://dash.cloudflare.com/31f1f2a9a0b237e42099a676e428f9fd/pikacloud.ga/dns' target="_blank">CloudFlare</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+
+
+    </header>
+    
+    <section id="page">
+      <div id="site" class="showBoxClass iframeListe">
+        <div id="portainer" class="showClass">
+          <img src="iframe_bg.png" alt="iframe background">
+          <iframe src="PortainerHttpOrHttps://PortainerIp:PortainerPort" onload="documentIsReady(this);"></iframe>
+        </div>
+        
+        <div id="proxy" class="showClass">
+          <img src="iframe_bg.png" alt="iframe background">
+          <iframe src="ProxyHttpOrHttps://ProxyIp:ProxyPort" onload="documentIsReady(this);"></iframe>
+        </div>
+        
+        <div id="ssh" class="showClass">
+          <img src="iframe_bg.png" alt="iframe background">
+          <iframe src="WebSshHttpOrHttps://WebSshIp:WebSshPort" onload="documentIsReady(this);"></iframe>
+        </div>
+
+        <div id="dozzle" class="showClass">
+          <img src="iframe_bg.png" alt="iframe background">
+          <iframe src="DozzleHttpOrHttps://DozzleIp:DozzlePort" onload="documentIsReady(this);"></iframe>
+        </div>
+      </div>
+    </section>
+    
+  </body>
+</html>
