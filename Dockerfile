@@ -1,24 +1,32 @@
-FROM httpd:latest
+FROM debian:latest
 
-RUN rm -Rf "/usr/local/apache2/htdocs/*"
-ADD ./site/* /usr/local/apache2/htdocs/
+EXPOSE 80
 
-ENV PortainerHttpOrHttps=http
-ENV WebSshHttpOrHttps=http
-ENV DozzleHttpOrHttps=http
-ENV ProxyHttpOrHttps=http
+RUN apt-get update
+RUN apt-get -y install python3 python3-pip
 
-ENV PortainerPort=9443
-ENV WebSshPort=8002
-ENV DozzlePort=8001
-ENV ProxyPort=81
+RUN apt-get -y install apache2
+RUN a2enmod cgi
 
-ENV PortainerIp=0.0.0.0
-ENV WebSshIp=0.0.0.0
-ENV DozzleIp=0.0.0.0
-ENV ProxyIp=0.0.0.0
+RUN service apache2 restart
 
-ADD ./init.sh /bin/
-RUN chmod +x /bin/init.sh
+RUN pip3 install art
 
-CMD [ "/bin/init.sh" ]
+#enable cgi in the website root
+#second block to allow .htaccess
+RUN echo "                       \n \
+<Directory /var/www/html>        \n \
+   Options +ExecCGI              \n \
+   AddHandler cgi-script .py     \n \
+   DirectoryIndex index.py       \n \
+</Directory>                     \n \
+" >> /etc/apache2/apache2.conf
+
+RUN chmod -R u+rwx,g+x,o+x /var/www/html
+
+RUN ln -sf /usr/bin/python /usr/local/bin/python
+
+RUN rm -Rf /var/www/html/*
+ADD ./site/* /var/www/html/
+
+CMD /usr/sbin/apache2ctl -D FOREGROUND

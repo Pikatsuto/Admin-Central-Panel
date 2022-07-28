@@ -75,8 +75,6 @@ function multiTogg(showBoxId, showBoxId1, ifButtun){
         if (execTogg.indexOf(showBoxId) !== -1) {
             offTogg(showBoxId);
             numTogg --
-            let index = execTogg2.indexOf(showBoxId);
-            execTogg.splice(index, 1);
             if (ifButtun) {
                 document.getElementById(showBoxId + "Menu").classList.remove("is-show");
             }
