@@ -26,7 +26,4 @@ RUN chmod -R u+rwx,g+x,o+x /var/www/html
 
 RUN ln -sf /usr/bin/python /usr/local/bin/python
 
-RUN rm -Rf /var/www/html/*
-ADD ./site/* /var/www/html/
-
 CMD /usr/sbin/apache2ctl -D FOREGROUND

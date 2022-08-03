@@ -1,21 +1,34 @@
 {
-  "id": {
-    "mail": "",
-    "mdp": ""
-  },
   "folder": [
     {
-      "name": "Panels",
+      "name": "Iframe",
       "content": [
         {
-          "name": "Portainer",
-          "url": "PortainerHttpOrHttps://PortainerIp:PortainerPort",
-          "iframe": true
+          "name": "Exemple",
+          "url": "https://exemple.com",
+          "iframe": true,
+          "dark": false
         },
         {
-          "name": "Proxy",
-          "url": "ProxyHttpOrHttps://ProxyIp:ProxyPort",
-          "iframe": true
+          "name": "Exemple 2",
+          "url": "https://exemple.com",
+          "iframe": true,
+          "dark": false
+        }
+      ]
+    },
+    {
+      "name": "Link",
+      "content": [
+        {
+          "name": "Exemple",
+          "url": "https://exemple.com",
+          "iframe": false
+        },
+        {
+          "name": "Exemple 2",
+          "url": "https://exemple.com",
+          "iframe": false
         }
       ]
     },
@@ -23,31 +36,19 @@
       "name": "main",
       "content": [
         {
-          "name": "SSH",
-          "url": "WebSshHttpOrHttps://WebSshIp:WebSshPort",
-          "iframe": true
-        },
-        {
-          "name": "Dozzle",
-          "url": "DozzleHttpOrHttps://DozzleIp:DozzlePort",
-          "iframe": true
+          "name": "Exemple Dark",
+          "url": "https://exemple.com",
+          "iframe": true,
+          "dark": true
         }
       ]
-    },
+    }
+  ],
+  "desktops": [
     {
-      "name": "Domaine",
-      "content": [
-        {
-          "name": "Freenom",
-          "url": "https://my.freenom.com/clientarea.php?action=domains",
-          "iframe": false
-        },
-        {
-          "name": "CloudFlare",
-          "url": "https://dash.cloudflare.com/31f1f2a9a0b237e42099a676e428f9fd/pikacloud.ga/dns",
-          "iframe": false
-        }
-      ]
+      "name": "Exemple",
+      "icon": "https://methodorecherche.com/wp-content/uploads/2018/12/exemple-de-probl%C3%A9matique.png",
+      "link": "https://exemple.com"
     }
   ]
 }

@@ -92,7 +92,10 @@ function multiTogg(showBoxId, showBoxId1, ifButtun){
         };
     };
 
-    if (numTogg == 1){
+    if (numTogg == 0){
+        document.getElementById("page").style.display = 'none';
+    } else if (numTogg == 1){
+        document.getElementById("page").style.display = 'block';
         for (let myClass of document.getElementsByClassName("showClass")) {
             myClass.classList.add("inShowBoxClass");
         }

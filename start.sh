@@ -3,4 +3,6 @@
 sudo docker build -t pikatsuto/admin-central-panel .
 sudo docker compose up -d
 
-sudo nano /var/lib/docker/volumes/proadmin_full_WebPanel_Data/_data/data.json
+sudo rm /var/lib/docker/volumes/AdminCentralPanel_Data/_data/*
+
+sudo cp ./site/* /var/lib/docker/volumes/AdminCentralPanel_Data/_data/

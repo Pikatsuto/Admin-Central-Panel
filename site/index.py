@@ -18,7 +18,7 @@ site_header = """
   <link rel="stylesheet" href="style.css">
 
   <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
-  <title>Admin Central Panel</title>
+  <title>Admin</title>
 
   <script src="index.js"></script>
 
@@ -27,7 +27,7 @@ site_header = """
 <header>
   <div id="title" onclick="offToggAll()">
     <img src="favicon.png" alt="favicon" id="favicon" onclick="console.log('test')">
-    <h1>Admin Central Panel</h1>
+    <h1>Heurepika Panel</h1>
   </div>
 
   <div class="top-line"></div>
@@ -98,26 +98,82 @@ for folder in data["folder"]:
 
 site_middle = """
   </nav>
-  <img src="settings.png" alt="settings icon" id="settings" onclick="console.log('test')">
+  <img src="settings.png" alt="settings icon" id="settings" onClick='multiTogg("Settings", "site", true)'>
 
 </header>
+
+<div id="search_bar">
+    <div class="widget_google">
+        <form method="GET" action="https://www.google.com/search">
+            <div class="row">
+                <div class="twelve_cell_form">
+                    <input type="text" class="twelve cell" name="q" size="31" maxlength="255" i18n-placeholder="search" value="" autofocus /> <input type="hidden" name="l" value="fr" />
+                    <button><i class="search"><img src="logo-google.svg" alt="google" style="width: 75px"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="DesktopListContent">     
+        <ul>
+"""
+print(site_middle)
+
+for desktop in data["desktops"]:
+    site_content = f"""
+            <li>
+                <a href="{desktop["link"]}">
+                    <img src="{desktop["icon"]}" alt="Nextcloud Icon">
+                    <p>{desktop["name"]}</p>
+                </a>
+            </li>
+"""
+    print(site_content)
+
+desktop_end = """
+        </ul>
+    </div>
+</div>
 
 <section id="page">
   <div id="site" class="showBoxClass iframeListe">
 """
-
-print(site_middle)
+print(desktop_end)
 
 for folder in data["folder"]:
     for site in folder["content"]:
         if site["iframe"]:
-            iframe_content = f"""
+            if site["dark"]:
+                iframe_content = f"""
+    <div id="{site["name"]}" class="showClass">
+      <div class='iframe_bg'></div>
+      <iframe src="{site["url"]}" class="dark"></iframe>
+    </div>
+"""
+            else:
+                iframe_content = f"""
     <div id="{site["name"]}" class="showClass">
       <img src="iframe_bg.png" alt="iframe background">
-      <iframe src="{site["url"]}"></iframe>
+      <iframe src="{site["url"]}""></iframe>
     </div>
 """
             print(iframe_content)
+
+start_form = """
+    <div id="Settings" class="showClass">
+        <h2>Settings</h2>
+        <form action="/index.py">
+            <div>
+                <label for="folder">Choose a folder</label>
+                <select name="folder" id="select_folder">
+                    <option value="folder">Choose a folder</option>
+"""
+
+end_form = """
+                </select>
+            </div>
+        </form>
+    </div>
+"""
 
 site_end = """
   </div>
